@@ -131,7 +131,8 @@ uv run alembic upgrade head
 如果是首次迁移，可先用 autogenerate 生成迁移文件：
 
 ```bash
-uv run alembic revision --autogenerate -m "create houses table"
+# 生成自动迁移脚本（首次迁移）
+uv run alembic revision --autogenerate -m "create houses and users tables"
 ```
 
 ---
@@ -139,7 +140,7 @@ uv run alembic revision --autogenerate -m "create houses table"
 ## 4️⃣ 训练机器学习模型
 
 ```bash
-uv run python -m app.ml_model
+uv run python -m app.train
 ```
 
 完成后会生成：
