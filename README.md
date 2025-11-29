@@ -114,6 +114,16 @@ uv sync
 uv run python create_database.py
 ```
 
+注意要在.env文件中配置数据库连接信息：
+
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=house_price_db
+```
+
 默认会创建：
 
 ```
