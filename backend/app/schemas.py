@@ -1,7 +1,7 @@
 # app/schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-
+from datetime import datetime
 # ===== 用户相关 =====
 class UserBase(BaseModel):
     email: EmailStr
@@ -19,6 +19,21 @@ class UserRead(UserBase):
     class Config:
         from_attributes = True  # SQLAlchemy 2.x: 原来的 orm_mode=True
 
+class UserOut(UserBase):
+    id: int
+    is_active: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+class UserUpdate(BaseModel):
+    email: EmailStr
+    full_name: str | None = None
+
+class PasswordUpdate(BaseModel):
+    old_password: str
+    new_password: str
 
 # ===== JWT Token 相关 =====
 class Token(BaseModel):
@@ -29,7 +44,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     user_id: Optional[int] = None
     email: Optional[EmailStr] = None
-    
+
 class HouseBase(BaseModel):
     area_sqm: float
     bedrooms: int

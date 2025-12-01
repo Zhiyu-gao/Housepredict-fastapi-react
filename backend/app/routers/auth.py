@@ -2,21 +2,26 @@
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from app import models
 from app.db import get_db
 from app.schemas import UserCreate, UserRead, Token
+from jose import JWTError, jwt  # 新增
 from app.core.security import (
     get_password_hash,
     verify_password,
     create_access_token,
     ACCESS_TOKEN_EXPIRE_MINUTES,
+    SECRET_KEY,
+    ALGORITHM,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+# 用于从 Authorization 头里抽 token
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")  # 注意路径要跟登录接口对应
 
 @router.post("/register", response_model=UserRead)
 def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
@@ -66,3 +71,38 @@ def login(
     )
 
     return Token(access_token=access_token, token_type="bearer")
+
+# ------------ 依赖：通过 token 获取当前用户 ------------
+
+async def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+) -> models.User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="无法验证凭证",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        # 解码 JWT，拿到 payload
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        sub = payload.get("sub")
+        if sub is None:
+            raise credentials_exception
+        user_id = int(sub)
+    except (JWTError, ValueError):
+        # JWT 格式错误 / sub 不是数字
+        raise credentials_exception
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user is None:
+        raise credentials_exception
+
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="用户已被禁用",
+        )
+
+    return user
