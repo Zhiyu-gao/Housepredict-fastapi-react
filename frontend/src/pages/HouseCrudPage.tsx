@@ -31,7 +31,7 @@ interface House extends HouseFormValues {
   id: number;
 }
 
-const API_BASE_URL = "http://127.0.0.1:8080";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 const HouseCrudPage: React.FC = () => {
   const [houseForm] = Form.useForm<HouseFormValues>();

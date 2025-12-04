@@ -3,7 +3,7 @@ import axios from "axios";
 import { getToken, clearToken } from "../auth/token";
 
 export const api = axios.create({
-  baseURL: "http://localhost:8080", // 根据你的后端实际地址改
+  baseURL: "http://localhost:8000", // 根据你的后端实际地址改
   withCredentials: false,
 });
 
