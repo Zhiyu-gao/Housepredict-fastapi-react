@@ -2,10 +2,13 @@
 import axios from "axios";
 import { getToken, clearToken } from "../auth/token";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const api = axios.create({
-  baseURL: "http://localhost:8000", // 根据你的后端实际地址改
+  baseURL: API_BASE_URL,
   withCredentials: false,
 });
+
 
 // 请求拦截：自动加 Authorization 头
 api.interceptors.request.use(
