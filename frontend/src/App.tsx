@@ -16,6 +16,7 @@ import {
   UserOutlined,
   HomeOutlined,
   LogoutOutlined,
+  GithubOutlined,  
 } from "@ant-design/icons";
 
 import LoginPage from "./pages/LoginPage";
@@ -24,6 +25,9 @@ import PredictPage from "./pages/PredictPage";
 import HouseCrudPage from "./pages/HouseCrudPage";
 import AccountPage from "./pages/AccountPage";
 import VisualizationPage from "./pages/VisualizationPage";
+import CrawlerTaskPage from "./pages/CrawlerTaskPage";
+import MetadataPage from "./pages/MetadataPage";
+
 import { getToken, clearToken } from "./auth/token";
 
 const { Sider, Header, Content } = Layout;
@@ -56,67 +60,117 @@ function AppLayout() {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        width={230}
+      {/* 左侧 Sider */}
+    <Sider
+      width={230}
+      style={{
+        background: "#020617",
+        borderRight: "1px solid #111827",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      {/* 顶部 logo */}
+      <div
         style={{
-          background: "#020617",
-          borderRight: "1px solid #111827",
+          height: 64,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontWeight: 600,
+          fontSize: 18,
+          color: "#e5e7eb",
+          borderBottom: "1px solid #111827",
         }}
       >
-        {/* 左上角 logo / 标题 */}
-        <div
-          style={{
-            height: 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 600,
-            fontSize: 18,
-            color: "#e5e7eb",
-            borderBottom: "1px solid #111827",
-          }}
-        >
-          🏠 房价预测系统
-        </div>
+        🏠 房价预测系统
+      </div>
 
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[selectedKey]}
-          onClick={({ key }) => {
-            if (key === "predict") navigate("/predict");
-            if (key === "houses") navigate("/houses");
-            if (key === "visualization") navigate("/visualization");
-            if (key === "account") navigate("/account");
-          }}
-          style={{
-            paddingTop: 12,
-            background: "#020617",
-          }}
-          items={[
-            {
-              key: "predict",
-              icon: <HomeOutlined />,
-              label: "房价预测",
-            },
-            {
-              key: "houses",
-              icon: <ApartmentOutlined />,
-              label: "房源增删改查",
-            },
-            {
-              key: "visualization",
-              icon: <LineChartOutlined />,
-              label: "可视化大屏",
-            },
-            {
-              key: "account",
-              icon: <UserOutlined />,
-              label: "我的信息",
-            },
-          ]}
-        />
-      </Sider>
+      {/* 主菜单 */}
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={[selectedKey]}
+        onClick={({ key }) => {
+          if (key === "predict") navigate("/predict");
+          if (key === "houses") navigate("/houses");
+          if (key === "visualization") navigate("/visualization");
+          if (key === "account") navigate("/account");
+
+          // 新增路由（你之后需要在 Routes 中补上页面）
+          if (key === "crawler") navigate("/crawler");
+          if (key === "metadata") navigate("/metadata");
+
+          if (key === "github") {
+            window.open("https://github.com/Zhiyu-gao/Housepredict-fastapi-react", "_blank");
+          }
+        }}
+        style={{
+          paddingTop: 12,
+          background: "#020617",
+          flex: 1,
+        }}
+        items={[
+          {
+            key: "predict",
+            icon: <HomeOutlined />,
+            label: "房价预测",
+          },
+          {
+            key: "houses",
+            icon: <ApartmentOutlined />,
+            label: "房源增删改查",
+          },
+          {
+            key: "visualization",
+            icon: <LineChartOutlined />,
+            label: "可视化大屏",
+          },
+          {
+            key: "account",
+            icon: <UserOutlined />,
+            label: "我的信息",
+          },
+
+          { type: "divider" },
+
+          {
+            key: "crawler",
+            icon: <ApartmentOutlined />,
+            label: "爬虫任务管理后台",
+          },
+          {
+            key: "metadata",
+            icon: <LineChartOutlined />,
+            label: "元数据标注后台",
+          },
+          {
+            key: "github",
+            icon: <GithubOutlined />,
+            label: "源码仓库",
+          },
+        ]}
+    />
+
+      {/* 底部退出按钮 */}
+      <div
+        style={{
+          borderTop: "1px solid #111827",
+          padding: 12,
+        }}
+      >
+        <Button
+          block
+          danger
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+        >
+          退出登录
+        </Button>
+      </div>
+    </Sider>
+
 
       <Layout>
         {/* 顶部细白条 */}
@@ -133,7 +187,15 @@ function AppLayout() {
           <Text style={{ color: "#e5e7eb", fontSize: 16 }}>
             房价预测 & 房源管理后台
           </Text>
-          <Space>
+          <Space size={16}>
+            <a
+              href="https://github.com/Zhiyu-gao/Housepredict-fastapi-react" 
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: "#e5e7eb", fontSize: 20 }}
+            >
+              <GithubOutlined />
+            </a>
             <Text type="secondary" style={{ fontSize: 13 }}>
               已登录
             </Text>
@@ -188,6 +250,8 @@ function App() {
           <Route path="/visualization" element={<VisualizationPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/" element={<Navigate to="/predict" replace />} />
+          <Route path="/crawler" element={<CrawlerTaskPage />} />
+          <Route path="/metadata" element={<MetadataPage />} />
         </Route>
 
         {/* 兜底 */}
