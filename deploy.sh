@@ -6,11 +6,14 @@ echo "=========================================="
 
 set -e  # 出错立即停止脚本
 
-# 1. 拉取最新代码
+SERVER_IP="20.2.82.150"
+
+#############################################
+# 1. 更新代码
+#############################################
 echo "🔄 拉取 Git 最新代码..."
 git fetch --all
-git reset --hard origin/main  # 如果你是 main 分支
-# git reset --hard origin/master # 如果你是 master 分支
+git reset --hard origin/main  # 如果你确认 main 分支是服务器部署分支
 
 echo ""
 echo "=========================================="
@@ -21,13 +24,9 @@ echo "=========================================="
 echo "🔄 停止旧服务..."
 docker compose down
 
-# 3. 重建镜像（前端 + 后端 + AI Service）
+# 3. 重建镜像
 echo "🔨 构建新镜像..."
-docker compose build --no-cache
-
-# 4. 启动服务
-echo "🚀 启动所有容器..."
-docker compose up -d
+docker compose up -d --build
 
 echo ""
 echo "=========================================="
@@ -42,21 +41,27 @@ echo " 🩺 后端健康检查"
 echo "=========================================="
 
 sleep 3
-curl -s http://localhost20.2.82.150:8000/docs >/dev/null && echo "✔ Backend 正常运行" || echo "❌ Backend 健康检查失败"
+curl -s http://$SERVER_IP:8000/docs >/dev/null \
+  && echo "✔ Backend 正常运行" \
+  || echo "❌ Backend 健康检查失败"
 
 echo ""
 echo "=========================================="
 echo " 🧠 AI Service 健康检查"
 echo "=========================================="
 
-curl -s http://20.2.82.150:8080/docs >/dev/null && echo "✔ AI Service 正常运行" || echo "❌ AI Service 健康检查失败"
+curl -s http://$SERVER_IP:8080/docs >/dev/null \
+  && echo "✔ AI Service 正常运行" \
+  || echo "❌ AI Service 健康检查失败"
 
 echo ""
 echo "=========================================="
 echo " 🎨 前端健康检查"
 echo "=========================================="
 
-curl -s http://localhost >/dev/null && echo "✔ Frontend 正常运行" || echo "❌ Frontend 健康检查失败"
+curl -s http://$SERVER_IP >/dev/null \
+  && echo "✔ Frontend 正常运行" \
+  || echo "❌ Frontend 健康检查失败"
 
 echo ""
 echo "=========================================="
