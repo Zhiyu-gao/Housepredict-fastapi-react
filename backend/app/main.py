@@ -16,6 +16,7 @@ app.include_router(auth.router)
 
 
 origins = [
+    "http://20.2.82.150",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
