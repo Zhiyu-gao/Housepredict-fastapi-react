@@ -389,7 +389,7 @@ const VisualizationPage: React.FC = () => {
                           ))}
                         </Pie>
                         <Tooltip
-                          formatter={(value: any, name: any, item: any) => [
+                          formatter={(value: any, _name: any, item: any) => [
                             `${value} 套`,
                             `${item.payload.bedrooms} 室`,
                           ]}

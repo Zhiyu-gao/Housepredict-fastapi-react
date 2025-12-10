@@ -10,7 +10,7 @@ interface CrawlerTask {
 }
 
 export default function CrawlerTaskPage() {
-  const [tasks, setTasks] = useState<CrawlerTask[]>([
+  const [tasks] = useState<CrawlerTask[]>([
     {
       id: 1,
       name: "链家北京租房爬虫",
