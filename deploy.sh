@@ -42,14 +42,14 @@ echo " 🩺 后端健康检查"
 echo "=========================================="
 
 sleep 3
-curl -s http://localhost:8000/docs >/dev/null && echo "✔ Backend 正常运行" || echo "❌ Backend 健康检查失败"
+curl -s http://localhost20.2.82.150:8000/docs >/dev/null && echo "✔ Backend 正常运行" || echo "❌ Backend 健康检查失败"
 
 echo ""
 echo "=========================================="
 echo " 🧠 AI Service 健康检查"
 echo "=========================================="
 
-curl -s http://localhost:8080/docs >/dev/null && echo "✔ AI Service 正常运行" || echo "❌ AI Service 健康检查失败"
+curl -s http://20.2.82.150:8080/docs >/dev/null && echo "✔ AI Service 正常运行" || echo "❌ AI Service 健康检查失败"
 
 echo ""
 echo "=========================================="
