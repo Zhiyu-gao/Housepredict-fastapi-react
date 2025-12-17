@@ -25,7 +25,7 @@ KIMI_CONFIG = ProviderConfig(
 
 QWEN_CONFIG = ProviderConfig(
     base_url=_get_env("QWEN_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
-    api_key=_get_env("QWEN_API_KEY", "sk-cc197311c43a457f9f2de626d922c490"),
+    api_key=_get_env("QWEN_API_KEY", ""),
     model=_get_env("QWEN_MODEL", "qwen-plus"),
 )
 
