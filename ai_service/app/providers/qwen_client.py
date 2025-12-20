@@ -1,21 +1,27 @@
 # ai_service/app/providers/qwen_client.py
-from typing import List, Dict
 from openai import OpenAI
-
 from app.config import QWEN_CONFIG
 
 
-def get_qwen_client() -> OpenAI:
-    return OpenAI(
-        base_url=QWEN_CONFIG.base_url,
+def qwen_chat(prompt: str) -> str:
+    """
+    DashScope Qwen 的【唯一正确】OpenAI 兼容调用方式
+    """
+
+    client = OpenAI(
         api_key=QWEN_CONFIG.api_key,
+        base_url=QWEN_CONFIG.base_url,
     )
 
-
-def qwen_chat(messages: List[Dict[str, str]]) -> str:
-    client = get_qwen_client()
     completion = client.chat.completions.create(
         model=QWEN_CONFIG.model,
-        messages=messages,
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+        temperature=0.7,
     )
-    return completion.choices[0].message.content or ""
+
+    return completion.choices[0].message.content

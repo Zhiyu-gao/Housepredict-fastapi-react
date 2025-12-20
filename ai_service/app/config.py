@@ -34,3 +34,18 @@ DEEPSEEK_CONFIG = ProviderConfig(
     api_key=_get_env("DEEPSEEK_API_KEY", "dummy-deepseek-key"),
     model=_get_env("DEEPSEEK_MODEL", "deepseek-default-model"),
 )
+
+# ======================
+# JWT 配置（必须和 backend 一致）
+# ======================
+
+SECRET_KEY = _get_env(
+    "SECRET_KEY",
+    "CHANGE_ME_PLEASE",  # 兜底，防止本地炸
+)
+
+ALGORITHM = _get_env(
+    "ALGORITHM",
+    "HS256",
+)
+

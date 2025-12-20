@@ -26,3 +26,7 @@ class PriceAnalysisResponse(BaseModel):
     provider: AiProvider
     predicted_price: float
     analysis_markdown: str
+
+class ChatRequest(BaseModel):
+    question: str
+    # history: list[dict] | None = None

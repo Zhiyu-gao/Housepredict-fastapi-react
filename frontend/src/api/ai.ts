@@ -23,6 +23,7 @@ const aiClient = axios.create({
   baseURL: AI_BASE_URL,
   timeout: 60000,
 });
+export default aiClient;
 
 export const aiAPI = {
   priceAnalysis: (data: {

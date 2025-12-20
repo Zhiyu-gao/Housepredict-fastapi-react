@@ -27,6 +27,7 @@ import AccountPage from "./pages/AccountPage";
 import VisualizationPage from "./pages/VisualizationPage";
 import CrawlerTaskPage from "./pages/CrawlerTaskPage";
 import MetadataPage from "./pages/MetadataPage";
+import AiChatPage from "./pages/AiChatPage";
 
 import { getToken, clearToken } from "./auth/token";
 
@@ -97,7 +98,7 @@ function AppLayout() {
           if (key === "houses") navigate("/houses");
           if (key === "visualization") navigate("/visualization");
           if (key === "account") navigate("/account");
-
+          if (key === "ai_chat") navigate("/ai_chat");
           // 新增路由（你之后需要在 Routes 中补上页面）
           if (key === "crawler") navigate("/crawler");
           if (key === "metadata") navigate("/metadata");
@@ -134,7 +135,11 @@ function AppLayout() {
           },
 
           { type: "divider" },
-
+          {
+            key: "ai_chat",
+            icon: <LineChartOutlined />,
+            label: "AI 问答助手",
+          },
           {
             key: "crawler",
             icon: <ApartmentOutlined />,
@@ -249,6 +254,7 @@ function App() {
           <Route path="/houses" element={<HouseCrudPage />} />
           <Route path="/visualization" element={<VisualizationPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/ai_chat" element={<AiChatPage />} />
           <Route path="/" element={<Navigate to="/predict" replace />} />
           <Route path="/crawler" element={<CrawlerTaskPage />} />
           <Route path="/metadata" element={<MetadataPage />} />

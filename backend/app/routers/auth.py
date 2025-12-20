@@ -17,7 +17,7 @@ from app.core.security import (
     SECRET_KEY,
     ALGORITHM,
 )
-
+print("🔐 BACKEND SECRET_KEY =", SECRET_KEY)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # 用于从 Authorization 头里抽 token

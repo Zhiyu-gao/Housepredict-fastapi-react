@@ -3,10 +3,15 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import jwt, JWTError
 from app.schemas import TokenData
+import os
 
-# 生产环境请放到环境变量里
-SECRET_KEY = "change-this-in-production-very-secret"  # 很长的随机字符串
-ALGORITHM = "HS256"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ALGORITHM = os.environ.get("ALGORITHM", "HS256")
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY not set")
+
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 天
 
 # app/core/security.py

@@ -1,19 +1,23 @@
 # ai_service/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
 
+load_dotenv()   # 👈 这一行是“生死线”
 from app.schemas import PriceAnalysisRequest, PriceAnalysisResponse
 from app.price_analysis_service import analyze_price_with_ai
+from app.chat import router as chat_router
 
-app = FastAPI(title="AI House Price Service")
-
-# 允许前端访问（和你 backend 的 CORS 一样）
+app = FastAPI(title="AI House Price Service")# 允许前端访问（和你 backend 的 CORS 一样）
 origins = [
     "http://20.2.82.150",
     "http://20.2.82.150:80",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+app.include_router(chat_router)
 
 app.add_middleware(
     CORSMiddleware,
