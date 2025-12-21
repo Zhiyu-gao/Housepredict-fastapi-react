@@ -49,10 +49,21 @@ function AppLayout() {
   const navigate = useNavigate();
 
   const path = location.pathname;
-  let selectedKey = "predict";
-  if (path.startsWith("/houses")) selectedKey = "houses";
-  else if (path.startsWith("/account")) selectedKey = "account";
-  else if (path.startsWith("/visualization")) selectedKey = "visualization";
+
+  const pathKeyMap: Record<string, string> = {
+    "/predict": "predict",
+    "/houses": "houses",
+    "/visualization": "visualization",
+    "/account": "account",
+    "/ai_chat": "ai_chat",
+    "/crawler": "crawler",
+    "/metadata": "metadata",
+  };
+
+  const selectedKey =
+    Object.entries(pathKeyMap).find(([p]) => path.startsWith(p))?.[1] ??
+    "predict";
+
 
   const handleLogout = () => {
     clearToken?.(); // 如果你没有 clearToken，就删掉这一行，把 token 清理逻辑放这里

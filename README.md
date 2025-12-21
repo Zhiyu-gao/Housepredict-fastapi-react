@@ -254,7 +254,7 @@ DEEPSEEK_MODEL=your-deepseek-model-name
 ## 3️⃣ 启动 AI 服务（端口 `8080`）
 
 ```bash
-uv run uvicorn app.main:app --reload --port 8080
+uv run uvicorn app.main:app --port 8080
 ```
 
 访问文档：

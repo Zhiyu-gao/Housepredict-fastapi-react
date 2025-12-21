@@ -33,6 +33,13 @@ class ChatState(TypedDict):
 
 from app.providers.qwen_client import qwen_chat
 
+def run_intent_graph(question: str, username: str | None):
+    result = chat_graph.invoke({
+        "question": question,
+        "username": username,
+    })
+    return result["intent"]
+
 
 def intent_node(state: ChatState) -> ChatState:
     """
