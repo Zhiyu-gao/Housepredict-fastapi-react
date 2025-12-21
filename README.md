@@ -146,6 +146,8 @@ cd backend
 
 ```bash
 uv sync
+
+playwright install chromium
 ```
 
 （项目如果已经 `uv init --app .` 初始化过，这一步只会安装依赖）
