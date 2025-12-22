@@ -151,11 +151,11 @@ function AppLayout() {
             icon: <LineChartOutlined />,
             label: "AI 问答助手",
           },
-          {
-            key: "crawler",
-            icon: <ApartmentOutlined />,
-            label: "爬虫任务管理后台",
-          },
+          // {
+          //   key: "crawler",
+          //   icon: <ApartmentOutlined />,
+          //   label: "爬虫任务管理后台",
+          // },
           {
             key: "metadata",
             icon: <LineChartOutlined />,
