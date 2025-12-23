@@ -1,37 +1,24 @@
-# app/ml_model.py
-from pathlib import Path
 import joblib
-import pandas as pd
+import numpy as np
+from sqlalchemy.orm import Session
 from sklearn.linear_model import LinearRegression
+from app.db import SessionLocal
+from app.models import House
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = BASE_DIR / "data" / "house_prices.csv"
-MODEL_PATH = BASE_DIR / "data" / "house_price_model.pkl"
+MODEL_PATH = "model.pkl"
 
+def train_and_save():
+    db: Session = SessionLocal()
+    houses = db.query(House).all()
 
-def train_model_from_csv():
-    df = pd.read_csv(DATA_PATH)
-
-    feature_cols = ["area_sqm", "bedrooms", "age_years", "distance_to_metro_km"]
-    X = df[feature_cols]
-    y = df["price"]
+    X = np.array([[h.area_sqm, h.bedrooms, h.age_years] for h in houses])
+    y = np.array([h.price for h in houses])
 
     model = LinearRegression()
     model.fit(X, y)
 
-    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, MODEL_PATH)
-    print("✅ 模型训练完成，并保存到:", MODEL_PATH)
-
+    print("✅ model.pkl saved")
 
 def load_model():
-    if not MODEL_PATH.exists():
-        # 如果还没训练过，先训练一次
-        train_model_from_csv()
-    model = joblib.load(MODEL_PATH)
-    return model
-
-
-# 单独跑训练
-if __name__ == "__main__":
-    train_model_from_csv()
+    return joblib.load(MODEL_PATH)

@@ -7,7 +7,6 @@ export interface HouseFeatures {
   area_sqm: number;
   bedrooms: number;
   age_years: number;
-  distance_to_metro_km: number;
 }
 
 export interface PriceAnalysisResponse {

@@ -45,32 +45,52 @@ class TokenData(BaseModel):
     user_id: Optional[int] = None
     email: Optional[EmailStr] = None
 
-class HouseBase(BaseModel):
+# ========== 爬虫 ==========
+class CrawlHouseOut(BaseModel):
+    house_id: str
+    title: str
     area_sqm: float
-    bedrooms: int
-    age_years: int
-    distance_to_metro_km: float
-
-
-class HouseCreate(HouseBase):
-    price: float
-
-
-class HouseUpdate(HouseBase):
-    price: float
-
-
-class House(HouseBase):
-    id: int
-    price: float
+    layout: str
+    build_year: int
+    total_price_wan: float
+    unit_price: float
+    district: str
 
     class Config:
-        from_attributes = True  # SQLAlchemy 对象 -> Pydantic 模型
+        orm_mode = True
 
 
-class HouseFeatures(BaseModel):
-    """给 /predict 用的特征（不含 price）"""
+# ========== 标注 ==========
+class AnnotationFeatures(BaseModel):
     area_sqm: float
     bedrooms: int
     age_years: int
-    distance_to_metro_km: float
+
+class AnnotationLabel(BaseModel):
+    price: float
+
+class AnnotationCreate(BaseModel):
+    source_house_id: str
+    features: AnnotationFeatures
+    label: AnnotationLabel
+
+
+# ========== 训练 / 预测 ==========
+class HouseCreate(BaseModel):
+    area_sqm: float
+    bedrooms: int
+    age_years: int
+    price: float
+
+
+class HouseOut(HouseCreate):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class PredictRequest(BaseModel):
+    area_sqm: float
+    bedrooms: int
+    age_years: int

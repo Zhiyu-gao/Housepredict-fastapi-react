@@ -82,6 +82,7 @@ export default function AiChatPage() {
 
   return (
     <Card
+    
       bodyStyle={{
         height: "100vh",
         padding: 0,
@@ -90,6 +91,29 @@ export default function AiChatPage() {
         flexDirection: "column",
       }}
     >
+      {/* 顶部标题栏 */}
+      <div
+        style={{
+          height: 56,
+          flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          padding: "0 24px",
+          borderBottom: `1px solid ${token.colorBorderSecondary}`,
+          background: token.colorBgLayout,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: token.colorText,
+          }}
+        >
+          AI 聊天
+        </span>
+      </div>
+
       {/* 消息区（独立滚动） */}
       <div
         style={{

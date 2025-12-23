@@ -11,13 +11,16 @@ import {
 } from "react-router-dom";
 import { Layout, Menu, Button, Typography, Space } from "antd";
 import {
-  ApartmentOutlined,
-  LineChartOutlined,
-  UserOutlined,
   HomeOutlined,
+  BarChartOutlined,
+  RobotOutlined,
+  IdcardOutlined,
+  DatabaseOutlined,
+  CloudDownloadOutlined,
+  GithubOutlined,
   LogoutOutlined,
-  GithubOutlined,  
 } from "@ant-design/icons";
+
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -124,49 +127,46 @@ function AppLayout() {
           flex: 1,
         }}
         items={[
-          {
-            key: "predict",
-            icon: <HomeOutlined />,
-            label: "房价预测",
-          },
-          {
-            key: "houses",
-            icon: <ApartmentOutlined />,
-            label: "房源增删改查",
-          },
-          {
-            key: "visualization",
-            icon: <LineChartOutlined />,
-            label: "可视化大屏",
-          },
-          {
-            key: "account",
-            icon: <UserOutlined />,
-            label: "我的信息",
-          },
+        {
+          key: "predict",
+          icon: <HomeOutlined />,
+          label: "房价预测",
+        },
+        {
+          key: "visualization",
+          icon: <BarChartOutlined />,
+          label: "可视化大屏",
+        },
+        {
+          key: "account",
+          icon: <IdcardOutlined />,
+          label: "我的信息",
+        },
 
-          { type: "divider" },
-          {
-            key: "ai_chat",
-            icon: <LineChartOutlined />,
-            label: "AI 问答助手",
-          },
-          // {
-          //   key: "crawler",
-          //   icon: <ApartmentOutlined />,
-          //   label: "爬虫任务管理后台",
-          // },
-          {
-            key: "metadata",
-            icon: <LineChartOutlined />,
-            label: "元数据标注后台",
-          },
-          {
-            key: "github",
-            icon: <GithubOutlined />,
-            label: "源码仓库",
-          },
-        ]}
+        { type: "divider" },
+
+        {
+          key: "ai_chat",
+          icon: <RobotOutlined />,
+          label: "AI 问答助手",
+        },
+        {
+          key: "metadata",
+          icon: <DatabaseOutlined />,
+          label: "元数据标注后台",
+        },
+        // {
+        //   key: "crawler",
+        //   icon: <CloudDownloadOutlined />,
+        //   label: "爬虫任务管理",
+        // },
+        {
+          key: "github",
+          icon: <GithubOutlined />,
+          label: "源码仓库",
+        },
+      ]}
+
     />
 
       {/* 底部退出按钮 */}

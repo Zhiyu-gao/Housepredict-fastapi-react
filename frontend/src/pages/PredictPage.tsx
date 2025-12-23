@@ -24,7 +24,6 @@ interface PredictFormValues {
   area_sqm: number;
   bedrooms: number;
   age_years: number;
-  distance_to_metro_km: number;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -146,7 +145,6 @@ const PredictPage: React.FC = () => {
             area_sqm: 80,
             bedrooms: 3,
             age_years: 5,
-            distance_to_metro_km: 1.2,
           }}
         >
           <Row gutter={16}>
@@ -178,15 +176,6 @@ const PredictPage: React.FC = () => {
                 rules={[{ required: true, message: "请输入房龄" }]}
               >
                 <InputNumber min={0} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="距离地铁（公里）"
-                name="distance_to_metro_km"
-                rules={[{ required: true, message: "请输入距离地铁" }]}
-              >
-                <InputNumber min={0} step={0.1} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
           </Row>
