@@ -17,6 +17,8 @@ from app.core.security import (
     SECRET_KEY,
     ALGORITHM,
 )
+# from app.utils.aliyun_mail import send_email_code
+# from app.utils.email_store import verify_code
 print("🔐 BACKEND SECRET_KEY =", SECRET_KEY)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -106,3 +108,45 @@ async def get_current_user(
         )
 
     return user
+
+# @router.post("/email/code")
+# def send_email_code_api(data: EmailCodeRequest):
+#     code = generate_and_store_code(data.email)
+#     send_email_code(data.email, code)
+
+#     # 统一返回，不暴露邮箱是否存在
+#     return {"message": "验证码已发送，请查收邮箱"}
+
+# @router.post("/email/code-login", response_model=Token)
+# def email_code_login(
+#     data: EmailCodeLoginRequest,
+#     db: Session = Depends(get_db),
+# ):
+#     from app.utils.email_code import verify_code
+
+#     if not verify_code(data.email, data.code):
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="验证码错误或已过期",
+#         )
+
+#     user = db.query(models.User).filter(models.User.email == data.email).first()
+
+#     if not user:
+#         # 自动注册（无密码）
+#         user = models.User(
+#             email=data.email,
+#             full_name=None,
+#             hashed_password=None,
+#             is_active=True,
+#         )
+#         db.add(user)
+#         db.commit()
+#         db.refresh(user)
+
+#     access_token = create_access_token(
+#         data={"sub": str(user.id), "email": user.email},
+#         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+#     )
+
+#     return Token(access_token=access_token, token_type="bearer")

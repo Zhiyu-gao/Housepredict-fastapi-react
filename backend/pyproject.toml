@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.17.2",
+    "alibabacloud-dm20151123>=1.8.1",
     "bcrypt>=5.0.0",
     "cryptography>=46.0.3",
     "email-validator>=2.3.0",
@@ -19,6 +20,7 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.20",
+    "redis>=7.1.0",
     "scikit-learn>=1.7.2",
     "sqlalchemy>=2.0.44",
     "uvicorn[standard]>=0.38.0",

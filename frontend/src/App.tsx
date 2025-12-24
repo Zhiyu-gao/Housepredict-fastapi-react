@@ -1,5 +1,4 @@
 // src/App.tsx
-import type { ReactNode } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -16,9 +15,9 @@ import {
   RobotOutlined,
   IdcardOutlined,
   DatabaseOutlined,
-  CloudDownloadOutlined,
   GithubOutlined,
   LogoutOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 
 
@@ -31,21 +30,12 @@ import VisualizationPage from "./pages/VisualizationPage";
 import CrawlerTaskPage from "./pages/CrawlerTaskPage";
 import MetadataPage from "./pages/MetadataPage";
 import AiChatPage from "./pages/AiChatPage";
-
-import { getToken, clearToken } from "./auth/token";
+import ProjectIntroPage from "./pages/ProjectIntroPage";
+import RequireAuth from "./auth/RequireAuth";
+import {clearToken } from "./auth/token";
 
 const { Sider, Header, Content } = Layout;
 const { Text } = Typography;
-
-const isAuthenticated = () => !!getToken();
-
-function ProtectedRoute({ children }: { children: ReactNode }) {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
-  }
-  return <>{children}</>;
-}
-
 /** 登录后主布局 */
 function AppLayout() {
   const location = useLocation();
@@ -61,11 +51,12 @@ function AppLayout() {
     "/ai_chat": "ai_chat",
     "/crawler": "crawler",
     "/metadata": "metadata",
+    "/intro": "intro",
   };
 
   const selectedKey =
     Object.entries(pathKeyMap).find(([p]) => path.startsWith(p))?.[1] ??
-    "predict";
+    "intro";
 
 
   const handleLogout = () => {
@@ -116,7 +107,7 @@ function AppLayout() {
           // 新增路由（你之后需要在 Routes 中补上页面）
           if (key === "crawler") navigate("/crawler");
           if (key === "metadata") navigate("/metadata");
-
+          if (key === "intro") navigate("/intro");
           if (key === "github") {
             window.open("https://github.com/Zhiyu-gao/Housepredict-fastapi-react", "_blank");
           }
@@ -127,6 +118,11 @@ function AppLayout() {
           flex: 1,
         }}
         items={[
+        {
+          key: "intro",
+          icon: <InfoCircleOutlined />,
+          label: "项目介绍",
+        },
         {
           key: "predict",
           icon: <HomeOutlined />,
@@ -254,19 +250,14 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* 受保护的主应用 */}
-        <Route
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
+          <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
+          <Route path="/intro" element={<ProjectIntroPage />} />
           <Route path="/predict" element={<PredictPage />} />
           <Route path="/houses" element={<HouseCrudPage />} />
           <Route path="/visualization" element={<VisualizationPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/ai_chat" element={<AiChatPage />} />
-          <Route path="/" element={<Navigate to="/predict" replace />} />
+          <Route index element={<Navigate to="/intro" replace />} />
           <Route path="/crawler" element={<CrawlerTaskPage />} />
           <Route path="/metadata" element={<MetadataPage />} />
         </Route>
