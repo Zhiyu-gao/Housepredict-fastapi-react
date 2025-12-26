@@ -2,7 +2,7 @@
 
 **React + FastAPI + MySQL + Machine Learning + AI Agent + Crawler + LangGraph**
 
-一个**工程级全栈房价预测与分析系统**，融合了：
+一个**基于多智能体与大模型协同的房价预测与智能分析系统**，融合了：
 
 * ✅ 真实房源数据采集（链家爬虫）
 * ✅ 传统机器学习房价预测

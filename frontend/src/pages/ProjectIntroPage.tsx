@@ -28,7 +28,7 @@ export default function ProjectIntroPage() {
       </Title>
 
       <Paragraph style={{ color: "#d1d5db" }}>
-        这是一个<strong>工程级全栈房价预测与分析系统</strong>，融合了
+        这是一个<strong>基于多智能体与大模型协同的房价预测与智能分析系统</strong>，融合了
         <Text strong> 真实房源数据采集 </Text>、
         <Text strong> 传统机器学习建模 </Text>、
         <Text strong> 大模型 AI 分析 </Text>
