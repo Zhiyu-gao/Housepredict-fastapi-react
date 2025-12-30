@@ -4,8 +4,7 @@
   "features": {
     "area_sqm": 72.47,
     "bedrooms": 2,
-    "age_years": 31,
-    "distance_to_metro_km": 0.1
+    "age_years": 31
   },
   "label": {
     "price": 4000000

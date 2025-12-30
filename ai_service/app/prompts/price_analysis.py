@@ -23,8 +23,6 @@ def build_price_analysis_user_prompt(
 - 面积：{features.get("area_sqm")} ㎡
 - 卧室数：{features.get("bedrooms")} 个
 - 房龄：{features.get("age_years")} 年
-- 距离地铁：{features.get("distance_to_metro_km")} 公里
-
 已有机器学习模型预测该房源总价约为：{round(predicted_price):,} 元。
 
 请你从以下几个方面进行分析，并用 Markdown 结构化输出：

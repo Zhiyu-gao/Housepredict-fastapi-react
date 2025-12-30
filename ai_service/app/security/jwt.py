@@ -7,13 +7,11 @@ from app.config import SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-print("🔐 AI SECRET_KEY =", SECRET_KEY)
 
 
 def get_current_user_from_jwt(
     token: str = Depends(oauth2_scheme),
 ) -> dict:
-    print("🔥 AI 收到 Authorization token =", token)
     """
     AI 服务专用：
     - 只验证 JWT

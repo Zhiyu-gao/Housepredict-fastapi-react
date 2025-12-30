@@ -7,8 +7,6 @@ class HouseFeatures(BaseModel):
     area_sqm: float
     bedrooms: int
     age_years: int
-    distance_to_metro_km: float
-
 
 class AiProvider(str, Enum):
     kimi = "kimi"

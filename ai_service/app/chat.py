@@ -48,12 +48,10 @@ def chat_stream(
 
     # ✅ 第二步：真正的流式 —— 直接用 Qwen
     def event_generator():
-        print("🔥 SSE stream started")
         try:
             from app.providers.qwen_client import qwen_chat_stream
 
             for token in qwen_chat_stream(req.question):
-                print("➡️ token:", repr(token))
                 yield f"data: {json.dumps({'delta': token})}\n\n"
 
             print("✅ stream done")

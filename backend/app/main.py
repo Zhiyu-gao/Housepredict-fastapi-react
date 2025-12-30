@@ -1,6 +1,13 @@
 # app/main.py
 from dotenv import load_dotenv
-load_dotenv()
+import os
+from pathlib import Path
+# 仅在没有 DB_HOST 的情况下才加载 .env
+if not os.getenv("DB_HOST"):
+    BASE_DIR = Path(__file__).resolve().parents[1]
+    ENV_PATH = BASE_DIR / ".env"
+    if ENV_PATH.exists():
+        load_dotenv(ENV_PATH)
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware

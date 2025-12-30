@@ -1,52 +1,52 @@
 # create_database.py
 import pymysql
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # 可从 .env 加载 MySQL 配置
+# 仅在没有 DB_HOST 的情况下加载 .env
+if not os.getenv("DB_HOST"):
+    BASE_DIR = Path(__file__).resolve().parent
+    ENV_PATH = BASE_DIR / ".env"
+    if ENV_PATH.exists():
+        load_dotenv(ENV_PATH)
 
-MYSQL_USER = os.getenv("MYSQL_USER", "root")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
-MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")
-MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
-MYSQL_DB = os.getenv("MYSQL_DB", "house_price_db")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
+DB_NAME = os.getenv("DB_NAME", "house_price_db")
 
 def create_database():
-    print(f"📦 尝试连接 MySQL: {MYSQL_USER}@{MYSQL_HOST}:{MYSQL_PORT}")
+    print(f"📦 尝试连接 MySQL: {DB_USER}@{DB_HOST}:{DB_PORT}")
 
     try:
         conn = pymysql.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            port=MYSQL_PORT,
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            port=DB_PORT,
             charset="utf8mb4",
             autocommit=True,
         )
         print("✅ 已连接到 MySQL。")
     except Exception as e:
-        print("❌ 无法连接到 MySQL，请检查用户名/密码/端口是否正确。")
+        print("❌ 无法连接到 MySQL。")
         print(e)
-        return
+        raise  # 🔴 让 Docker 知道这里失败了
 
     cursor = conn.cursor()
-
-    # 创建数据库
     try:
         cursor.execute(
-            f"CREATE DATABASE IF NOT EXISTS `{MYSQL_DB}` "
+            f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}` "
             f"DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
         )
-        print(f"🎉 数据库 `{MYSQL_DB}` 已创建或已存在。")
-    except Exception as e:
-        print("❌ 创建数据库失败：")
-        print(e)
-        return
+        print(f"🎉 数据库 `{DB_NAME}` 已创建或已存在。")
     finally:
         cursor.close()
         conn.close()
 
-    print("✨ 完成。")
+    print("✨ create_database 完成。")
 
 if __name__ == "__main__":
     create_database()

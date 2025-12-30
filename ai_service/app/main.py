@@ -30,6 +30,7 @@ app.add_middleware(
 
 @app.post("/price-analysis", response_model=PriceAnalysisResponse)
 def price_analysis(body: PriceAnalysisRequest):
+    print("🔥🔥🔥 REAL app.main.py price_analysis HIT")
     """
     输入：
     - provider: kimi / qwen / deepseek

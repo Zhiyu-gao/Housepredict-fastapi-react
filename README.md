@@ -1,23 +1,23 @@
-# 🏠 House Price Prediction System
+# 🏠 House Price Prediction & AI Analysis System
 
-**React + FastAPI + MySQL + Machine Learning + AI Agent + Crawler + LangGraph**
+**React + FastAPI + MySQL + SQLAlchemy + Alembic + Machine Learning + AI Agent + LangGraph + Crawler**
 
-一个**基于多智能体与大模型协同的房价预测与智能分析系统**，融合了：
+一个**工程级、可扩展、前后端分离**的房价预测与智能分析系统，融合：
 
-* ✅ 真实房源数据采集（链家爬虫）
-* ✅ 传统机器学习房价预测
-* ✅ 多大模型 AI 分析（Kimi / Qwen / DeepSeek）
-* ✅ LangGraph 驱动的多步骤智能分析 Agent
-* ✅ 前后端分离架构 + 微服务设计
+* 📊 **真实房源数据采集（链家爬虫）**
+* 📈 **传统机器学习房价预测**
+* 🤖 **多大模型 AI 分析（Kimi / Qwen / DeepSeek）**
+* 🧠 **LangGraph 驱动的多步骤智能分析 Agent**
+* 🧱 **微服务架构（Backend / AI Service 解耦）**
 
 ---
 
 ## ✨ 项目亮点（TL;DR）
 
-* **不是假数据**：链家真实二手房爬虫
-* **不是单模型**：传统 ML + 大模型协同
-* **不是简单调用 LLM**：LangGraph 编排推理流程
-* **不是 demo**：JWT、CRUD、Alembic、Docker 全齐
+* **不是 Demo**：JWT、CRUD、Alembic、MySQL、微服务齐全
+* **不是假数据**：真实链家二手房爬虫
+* **不是单模型**：传统 ML + 多大模型协同
+* **不是简单 LLM 调用**：LangGraph 编排可解释分析流程
 * **不是耦合架构**：业务后端 / AI 服务 / 爬虫完全解耦
 
 ---
@@ -33,10 +33,9 @@
                            ▼
                   ┌────────────────┐
                   │   AI Service   │
-                  │  (FastAPI +    │
-                  │   LangGraph)   │
+                  │ (FastAPI +     │
+                  │  LangGraph)    │
                   └────────────────┘
-
             ▲
             │
      ┌────────────┐
@@ -49,143 +48,144 @@
 
 ## 🧩 功能模块概览
 
-### 🔧 Backend（FastAPI · 端口 8000）
+## 🔧 Backend（FastAPI · 端口 8000）
 
-**核心职责：业务系统 + 数据管理**
+**职责：业务系统 + 数据管理 + ML 预测**
+
+### 核心功能
 
 * 房源 CRUD（增 / 删 / 改 / 查）
 * 用户注册 / 登录（JWT）
-* 传统机器学习房价预测
-* 爬虫数据导入 & 标注
-* MySQL 持久化
+* 传统机器学习房价预测（LinearRegression）
+* 爬虫数据导入
+* MySQL 持久化 + SQLAlchemy ORM
 * Alembic 数据库迁移
+* CORS 支持前端访问
 
-**主要接口：**
+### 主要接口
 
-| Method | Path           | Description |
-| ------ | -------------- | ----------- |
-| POST   | `/auth/login`  | 用户登录        |
-| GET    | `/auth/me`     | 当前用户        |
-| GET    | `/houses`      | 房源列表        |
-| POST   | `/predict`     | ML 房价预测     |
-| POST   | `/crawl/house` | 导入爬虫房源      |
+| Method | Path             | Description |
+| ------ | ---------------- | ----------- |
+| POST   | `/auth/register` | 用户注册        |
+| POST   | `/auth/login`    | 登录（JWT）     |
+| GET    | `/auth/me`       | 当前用户        |
+| GET    | `/houses`        | 房源列表        |
+| POST   | `/houses`        | 新建房源        |
+| PUT    | `/houses/{id}`   | 更新房源        |
+| DELETE | `/houses/{id}`   | 删除房源        |
+| POST   | `/predict`       | ML 房价预测     |
+| POST   | `/crawl/house`   | 导入爬虫房源      |
 
 ---
 
-### 🤖 AI Service（FastAPI · 端口 8080）
+## 🤖 AI Service（FastAPI · 端口 8080）
 
-**核心职责：AI 推理 & Agent 编排**
+**职责：AI 推理 & Agent 编排**
 
-#### 支持的大模型
+### 支持的大模型（OpenAI 兼容协议）
 
 * **Kimi**
 * **Qwen**
 * **DeepSeek**
 
-（全部通过 OpenAI 兼容协议调用）
-
-#### 核心能力
+### 核心能力
 
 * 房价 AI 分析（Markdown 输出）
 * 多模型统一接口
 * Prompt 集中管理
-* LangGraph 驱动的多步骤分析流程
+* LangGraph 驱动多步骤分析流程
 
-```text
-ai_service/app/
-├── ai/
-│   └── graph.py          # LangGraph 分析流程定义
-├── price_analysis_service.py
-├── providers/
-│   ├── kimi_client.py
-│   ├── qwen_client.py
-│   └── deepseek_client.py
-├── prompts/
-│   └── price_analysis.py
+### 核心接口
+
+| Method | Path              | Description |
+| ------ | ----------------- | ----------- |
+| POST   | `/price-analysis` | 房价 AI 分析    |
+
+**请求示例：**
+
+```json
+{
+  "provider": "qwen",
+  "features": {
+    "area_sqm": 80,
+    "bedrooms": 3,
+    "age_years": 5,
+    "distance_to_metro_km": 1.2
+  },
+  "predicted_price": 450000
+}
 ```
 
 ---
 
-### 🧠 LangGraph 智能分析 Agent（实验性）
+## 🧠 LangGraph 智能分析 Agent（实验性）
 
-> 用于构建 **“可解释、多步骤、可扩展”** 的房价分析 Agent
+> 构建 **“可解释 · 多步骤 · 可扩展”** 的房价分析 Agent
 
-* 将 **传统 ML 预测结果** 作为输入节点
-* 自动触发：
+分析流程示例：
 
-  * 房价合理性判断
-  * 风险分析
-  * 买卖建议生成
-* 支持未来扩展：
+1. 读取传统 ML 预测价格
+2. 判断价格合理性
+3. 风险分析（地段 / 年限 / 流动性）
+4. 买卖建议生成
+5. Markdown 报告输出
 
-  * 多房源对比
-  * 投资决策 Agent
-  * 自动报告生成
+📌 可扩展方向：
+
+* 多房源对比 Agent
+* 投资回报率分析
+* 自动生成投资报告
 
 ---
 
-### 🕷 房源爬虫系统（链家 Lianjia Spider）
+## 🕷 链家房源爬虫系统（Lianjia Spider）
 
 **用于采集真实二手房数据**
 
-#### 特点
+### 特点
 
-* **必须使用有头浏览器**
+* 必须使用 **有头浏览器**
 * Cookie 登录态复用
 * 与业务系统完全解耦
-* 结果以 JSON 形式落盘
+* JSON 形式落盘
 
-#### 目录结构
+### 目录结构
 
 ```text
 backend/app/spider/lianjia/
-├── login_save_state.py     # 手动登录并保存 cookie
-├── lianjia_spider.py       # 主爬虫脚本
+├── login_save_state.py     # 登录并保存 cookie
+├── lianjia_spider.py       # 主爬虫
 ├── lianjia_state.json      # 登录态
-└── lianjia_json/           # 爬取结果（JSON）
+└── lianjia_json/           # 爬取结果
 ```
 
-#### 使用步骤（非常重要）
+### 使用步骤（重要）
 
-**① 先保存登录态（有头浏览器）**
+**① 保存登录态**
 
 ```bash
 cd backend
 python app/spider/lianjia/login_save_state.py
 ```
 
-* 会启动 Chromium
-* 手动登录链家
-* 自动保存 cookie 到 `lianjia_state.json`
-
-**② 再启动爬虫**
+**② 启动爬虫**
 
 ```bash
-cd backend
 python -m app.spider.lianjia.lianjia_spider
-```
-
-数据将保存到：
-
-```text
-backend/app/spider/lianjia/lianjia_json/
 ```
 
 ---
 
-### 💻 Frontend（React + Vite + Ant Design · 端口 5173）
+## 💻 Frontend（React + Vite + Ant Design · 端口 5173）
 
-* JWT 登录 / 注册
-* 左侧固定导航
-* 页面包括：
+### 功能页面
 
-  * 项目介绍
-  * 房价预测（ML）
-  * AI 分析（多模型）
-  * 房源管理（CRUD）
-  * 可视化大屏
-  * 元数据标注后台
-  * 爬虫任务页面
+* 登录 / 注册（JWT）
+* 房价预测（传统 ML）
+* AI 分析（多模型）
+* 房源管理（CRUD）
+* 可视化图表
+* 爬虫任务 & 数据标注页面
 
 ---
 
@@ -193,9 +193,9 @@ backend/app/spider/lianjia/lianjia_json/
 
 ```text
 house-price/
-├── backend/        # 业务后端（FastAPI + ML + DB）
-├── ai_service/     # AI 服务（FastAPI + LangGraph）
-├── frontend/       # 前端（React）
+├── backend/          # FastAPI + ML + DB + Spider
+├── ai_service/       # AI Service + LangGraph
+├── frontend/         # React 前端
 ├── docker-compose.yml
 └── README.md
 ```
@@ -204,8 +204,76 @@ house-price/
 
 ## ⚙️ 环境要求
 
-* Python ≥ 3.11（推荐 `uv`）
+* Python ≥ 3.11（强烈推荐 `uv`）
 * Node.js ≥ 18
-* MySQL ≥ 8
-* Playwright（用于爬虫）
+* MySQL ≥ 8.0
+* Playwright（爬虫）
 
+---
+
+## 🐍 Backend 启动（8000）
+
+```bash
+cd backend
+uv sync
+uv run python create_database.py
+uv run alembic upgrade head
+uv run python -m app.scripts.import_crawl_json
+uv run python -m app.train
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+---
+
+## 🤖 AI Service 启动（8080）
+
+```bash
+cd ai_service
+uv sync
+uv run uvicorn app.main:app --port 8080
+```
+
+---
+
+## 💻 Frontend 启动（5173）
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🛠 FAQ（常见问题）
+
+### ❓ uvicorn import 错误
+
+```bash
+uv run uvicorn app.main:app
+```
+
+### ❓ MySQL Unknown database
+
+```bash
+uv run python create_database.py
+```
+
+### ❓ Alembic 不生成迁移
+
+```python
+from app.db import Base
+target_metadata = Base.metadata
+```
+
+---
+
+## 📌 说明
+
+> 本项目适合作为：
+
+* 工程级全栈项目展示
+* AI Agent / LangGraph 实验平台
+* 房价分析 / 数据产品原型
+
+---

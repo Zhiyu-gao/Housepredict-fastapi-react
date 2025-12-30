@@ -9,11 +9,24 @@ from sqlalchemy.orm import Session
 from app.db import SessionLocal, Base, engine
 from app.models import CrawlHouse
 
-# 🔧 改成你的真实路径
-CRAWL_FOLDER = Path("/Users/zhiyu/Documents/house-price/backend/app/spider/lianjia/lianjia_json")
+
+# ======================
+# 路径配置（相对路径）
+# ======================
+
+BASE_DIR = Path(__file__).resolve().parent
+CRAWL_FOLDER = (
+    BASE_DIR / ".." / "spider" / "lianjia" / "lianjia_json"
+).resolve()
+
 
 def main():
-    # 确保表存在
+    print(f"📂 JSON 目录：{CRAWL_FOLDER}")
+
+    if not CRAWL_FOLDER.exists():
+        raise RuntimeError(f"JSON 目录不存在：{CRAWL_FOLDER}")
+
+    # 确保表存在（仅用于 dev，本质上应由 Alembic 管理）
     Base.metadata.create_all(bind=engine)
 
     db: Session = SessionLocal()
@@ -53,11 +66,11 @@ def main():
                 total_price_wan=data.get("total_price_wan"),
                 unit_price=data.get("unit_price"),
                 district=data.get("district"),
-                crawl_time=datetime.strptime(
-                    data["crawl_time"], "%Y-%m-%d %H:%M:%S"
-                )
-                if data.get("crawl_time")
-                else None,
+                crawl_time=(
+                    datetime.strptime(data["crawl_time"], "%Y-%m-%d %H:%M:%S")
+                    if data.get("crawl_time")
+                    else None
+                ),
             )
 
             db.add(house)
@@ -73,6 +86,7 @@ def main():
     print("✅ 导入完成")
     print(f"   新增：{inserted}")
     print(f"   跳过：{skipped}")
+
 
 if __name__ == "__main__":
     main()
