@@ -8,20 +8,20 @@ import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
 
-const { darkAlgorithm } = theme;
+const { defaultAlgorithm } = theme;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ConfigProvider
       locale={zhCN}
       theme={{
-        algorithm: darkAlgorithm,
+        algorithm: defaultAlgorithm,
         token: {
-          colorBgBase: "#020617",          // 整体背景
-          colorBgContainer: "#020617",     // Card/Table 背景
-          colorBorder: "#1f2937",
-          colorTextBase: "#e5e7eb",
-          colorTextSecondary: "#9ca3af",
+          colorBgBase: "#f5f7fa",          // 整体背景
+          colorBgContainer: "#ffffff",     // Card/Table 背景
+          colorBorder: "#e5e7eb",
+          colorTextBase: "#1f2937",
+          colorTextSecondary: "#6b7280",
           borderRadiusLG: 12,
         },
       }}

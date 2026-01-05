@@ -110,7 +110,6 @@
     "area_sqm": 80,
     "bedrooms": 3,
     "age_years": 5,
-    "distance_to_metro_km": 1.2
   },
   "predicted_price": 450000
 }

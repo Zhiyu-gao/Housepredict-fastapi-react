@@ -69,8 +69,8 @@ const pearson = (x: number[], y: number[]) => {
 };
 
 const cardStyle: React.CSSProperties = {
-  background: "#111827",
-  border: "1px solid #1f2937",
+  background: "#ffffff",
+  border: "1px solid #e5e7eb",
 };
 
 /* ================= 页面组件 ================= */
@@ -166,17 +166,17 @@ const VisualizationPage: React.FC = () => {
 
 
   return (
-    <div style={{ padding: 16, background: "#0f172a", minHeight: "100vh" }}>
+    <div style={{ padding: 16, background: "#f5f7fa", minHeight: "100vh" }}>
       {contextHolder}
 
-      <Title level={3} style={{ color: "#e5e7eb" }}>
+      <Title level={3} style={{ color: "#1f2937" }}>
         房价特征统计分析 <Tag color="blue">EDA</Tag>
       </Title>
-      <Text style={{ color: "#9ca3af" }}>
+      <Text style={{ color: "#6b7280" }}>
         对房价、结构特征及相关性进行统计分析
       </Text>
 
-      <Divider style={{ borderColor: "#1f2937" }} />
+      <Divider style={{ borderColor: "#e5e7eb" }} />
 
       {loading && <Skeleton active />}
 

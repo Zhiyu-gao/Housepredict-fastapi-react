@@ -70,8 +70,8 @@ function AppLayout() {
     <Sider
       width={230}
       style={{
-        background: "#020617",
-        borderRight: "1px solid #111827",
+        background: "#ffffff",
+        borderRight: "1px solid #e5e7eb",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -86,8 +86,8 @@ function AppLayout() {
           justifyContent: "center",
           fontWeight: 600,
           fontSize: 18,
-          color: "#e5e7eb",
-          borderBottom: "1px solid #111827",
+          color: "#1f2937",
+          borderBottom: "1px solid #e5e7eb",
         }}
       >
         🏠 房价预测系统
@@ -95,7 +95,7 @@ function AppLayout() {
 
       {/* 主菜单 */}
       <Menu
-        theme="dark"
+        theme="light"
         mode="inline"
         selectedKeys={[selectedKey]}
         onClick={({ key }) => {
@@ -114,7 +114,7 @@ function AppLayout() {
         }}
         style={{
           paddingTop: 12,
-          background: "#020617",
+          background: "#ffffff",
           flex: 1,
         }}
         items={[
@@ -168,7 +168,7 @@ function AppLayout() {
       {/* 底部退出按钮 */}
       <div
         style={{
-          borderTop: "1px solid #111827",
+          borderTop: "1px solid #e5e7eb",
           padding: 12,
         }}
       >
@@ -188,15 +188,15 @@ function AppLayout() {
         {/* 顶部细白条 */}
         <Header
           style={{
-            background: "#020617",
-            borderBottom: "1px solid #111827",
+            background: "#ffffff",
+            borderBottom: "1px solid #e5e7eb",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             padding: "0 20px",
           }}
         >
-          <Text style={{ color: "#e5e7eb", fontSize: 16 }}>
+          <Text style={{ color: "#1f2937", fontSize: 16 }}>
             房价预测 & 房源管理后台
           </Text>
           <Space size={16}>
@@ -204,7 +204,7 @@ function AppLayout() {
               href="https://github.com/Zhiyu-gao/Housepredict-fastapi-react" 
               target="_blank"
               rel="noreferrer"
-              style={{ color: "#e5e7eb", fontSize: 20 }}
+              style={{ color: "#1f2937", fontSize: 20 }}
             >
               <GithubOutlined />
             </a>
@@ -223,7 +223,7 @@ function AppLayout() {
 
         <Content
           style={{
-            background: "#020617",
+            background: "#f5f7fa",
             padding: 24,
           }}
         >

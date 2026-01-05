@@ -193,7 +193,7 @@ const HouseCrudPage: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <Title level={3} style={{ color: "#e5e7eb", marginBottom: 8 }}>
+      <Title level={3} style={{ color: "#1f2937", marginBottom: 8 }}>
         房源增删改查
       </Title>
       <Text type="secondary" style={{ fontSize: 13 }}>

@@ -119,7 +119,7 @@ const PredictPage: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <Title level={3} style={{ color: "#e5e7eb", marginBottom: 8 }}>
+      <Title level={3} style={{ color: "#1f2937", marginBottom: 8 }}>
         房价预测
       </Title>
       <Text type="secondary" style={{ fontSize: 13 }}>
@@ -213,9 +213,9 @@ const PredictPage: React.FC = () => {
             style={{
               marginTop: 8,
               padding: 12,
-              background: "#020617",
+              background: "#f9fafb",
               borderRadius: 8,
-              border: "1px solid #1f2937",
+              border: "1px solid #e5e7eb",
             }}
           >
             <Text type="secondary">模型预测价格约为：</Text>
@@ -231,9 +231,9 @@ const PredictPage: React.FC = () => {
             style={{
               marginTop: 16,
               padding: 12,
-              background: "#020617",
+              background: "#f9fafb",
               borderRadius: 8,
-              border: "1px solid #1f2937",
+              border: "1px solid #e5e7eb",
               maxHeight: 260,
               overflow: "auto",
               whiteSpace: "pre-wrap",
@@ -242,7 +242,7 @@ const PredictPage: React.FC = () => {
             <div style={{ marginBottom: 8 }}>
               <Tag color="purple">AI 分析 · {aiProvider}</Tag>
             </div>
-            <Text style={{ fontSize: 13, color: "#e5e7eb" }}>{aiAnalysis}</Text>
+            <Text style={{ fontSize: 13, color: "#374151" }}>{aiAnalysis}</Text>
           </div>
         )}
       </Card>
