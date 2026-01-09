@@ -8,7 +8,9 @@ from app.providers.qwen_client import qwen_chat
 def qwen_node(state: ChatState) -> ChatState:
     question = state["question"]
 
-    answer = qwen_chat(question)
+    answer = qwen_chat([
+        {"role": "user", "content": question}
+    ])
 
     return {
         "question": question,
