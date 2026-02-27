@@ -5,6 +5,7 @@ import {
   Form,
   InputNumber,
   Button,
+  Select,
   Tag,
   Typography,
   message,
@@ -12,10 +13,10 @@ import {
   Col,
   Space,
 } from "antd";
-import { Select } from "antd";
 import { getToken } from "../auth/token";
 import { aiAPI } from "../api/ai";
 import type { AiProvider } from "../api/ai";
+import { getErrorMessage } from "../utils/error";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -62,9 +63,8 @@ const PredictPage: React.FC = () => {
       const data = await res.json();
       setPredictedPrice(data.predicted_price);
       messageApi.success("预测成功");
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "预测失败，请检查后端是否已启动");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "预测失败，请检查后端是否已启动"));
     } finally {
       setPredicting(false);
     }
@@ -108,9 +108,8 @@ const PredictPage: React.FC = () => {
 
       setAiAnalysis(resp.data.analysis_markdown);
       messageApi.success("AI 分析完成");
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "AI 分析失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "AI 分析失败"));
     } finally {
       setAiLoading(false);
     }

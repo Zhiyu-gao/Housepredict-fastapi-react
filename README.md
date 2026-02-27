@@ -1,240 +1,93 @@
-# 🏠 House Price Prediction & AI Analysis System
+# House Price Platform
 
-**React + FastAPI + MySQL + SQLAlchemy + Alembic + Machine Learning + AI Agent + LangGraph + Crawler**
+A full-stack house price system with three services:
+- `frontend`: React + Vite + Ant Design
+- `backend`: FastAPI + SQLAlchemy + MySQL + ML inference
+- `ai_service`: FastAPI + multi-provider LLM analysis + LangGraph chat intent routing
 
-一个**工程级、可扩展、前后端分离**的房价预测与智能分析系统，融合：
+The project supports user authentication, house data management, model-based price prediction, and AI-generated analysis.
 
-* 📊 **真实房源数据采集（链家爬虫）**
-* 📈 **传统机器学习房价预测**
-* 🤖 **多大模型 AI 分析（Kimi / Qwen / DeepSeek）**
-* 🧠 **LangGraph 驱动的多步骤智能分析 Agent**
-* 🧱 **微服务架构（Backend / AI Service 解耦）**
+## Project Overview
 
----
+### Core capabilities
+- JWT-based authentication (`register`, `login`, current-user APIs)
+- House dataset CRUD for model samples
+- Price prediction API based on trained `model.pkl`
+- Crawled house metadata browsing + annotation flow
+- AI analysis endpoint for Kimi / Qwen / DeepSeek
+- AI chat endpoint (normal and streaming)
 
-## ✨ 项目亮点（TL;DR）
-
-* **不是 Demo**：JWT、CRUD、Alembic、MySQL、微服务齐全
-* **不是假数据**：真实链家二手房爬虫
-* **不是单模型**：传统 ML + 多大模型协同
-* **不是简单 LLM 调用**：LangGraph 编排可解释分析流程
-* **不是耦合架构**：业务后端 / AI 服务 / 爬虫完全解耦
-
----
-
-## 🚀 系统整体架构
+### Architecture
 
 ```text
-┌────────────┐      ┌────────────┐
-│  Frontend  │─────▶│  Backend   │─────▶ MySQL
-│  (React)   │      │ (FastAPI)  │
-└────────────┘      └─────┬──────┘
-                           │
-                           ▼
-                  ┌────────────────┐
-                  │   AI Service   │
-                  │ (FastAPI +     │
-                  │  LangGraph)    │
-                  └────────────────┘
-            ▲
-            │
-     ┌────────────┐
-     │  Crawler   │
-     │ (Lianjia)  │
-     └────────────┘
+Frontend (React, :5173 / :80)
+  |- calls Backend API (:8000)
+  |- calls AI Service (:8080)
+
+Backend (FastAPI)
+  |- MySQL (users, houses, crawled houses)
+  |- local model.pkl for /predict
+
+AI Service (FastAPI)
+  |- provider adapters (Kimi/Qwen/DeepSeek)
+  |- LangGraph intent workflow
 ```
 
----
-
-## 🧩 功能模块概览
-
-## 🔧 Backend（FastAPI · 端口 8000）
-
-**职责：业务系统 + 数据管理 + ML 预测**
-
-### 核心功能
-
-* 房源 CRUD（增 / 删 / 改 / 查）
-* 用户注册 / 登录（JWT）
-* 传统机器学习房价预测（LinearRegression）
-* 爬虫数据导入
-* MySQL 持久化 + SQLAlchemy ORM
-* Alembic 数据库迁移
-* CORS 支持前端访问
-
-### 主要接口
-
-| Method | Path             | Description |
-| ------ | ---------------- | ----------- |
-| POST   | `/auth/register` | 用户注册        |
-| POST   | `/auth/login`    | 登录（JWT）     |
-| GET    | `/auth/me`       | 当前用户        |
-| GET    | `/houses`        | 房源列表        |
-| POST   | `/houses`        | 新建房源        |
-| PUT    | `/houses/{id}`   | 更新房源        |
-| DELETE | `/houses/{id}`   | 删除房源        |
-| POST   | `/predict`       | ML 房价预测     |
-| POST   | `/crawl/house`   | 导入爬虫房源      |
-
----
-
-## 🤖 AI Service（FastAPI · 端口 8080）
-
-**职责：AI 推理 & Agent 编排**
-
-### 支持的大模型（OpenAI 兼容协议）
-
-* **Kimi**
-* **Qwen**
-* **DeepSeek**
-
-### 核心能力
-
-* 房价 AI 分析（Markdown 输出）
-* 多模型统一接口
-* Prompt 集中管理
-* LangGraph 驱动多步骤分析流程
-
-### 核心接口
-
-| Method | Path              | Description |
-| ------ | ----------------- | ----------- |
-| POST   | `/price-analysis` | 房价 AI 分析    |
-
-**请求示例：**
-
-```json
-{
-  "provider": "qwen",
-  "features": {
-    "area_sqm": 80,
-    "bedrooms": 3,
-    "age_years": 5,
-  },
-  "predicted_price": 450000
-}
-```
-
----
-
-## 🧠 LangGraph 智能分析 Agent（实验性）
-
-> 构建 **“可解释 · 多步骤 · 可扩展”** 的房价分析 Agent
-
-分析流程示例：
-
-1. 读取传统 ML 预测价格
-2. 判断价格合理性
-3. 风险分析（地段 / 年限 / 流动性）
-4. 买卖建议生成
-5. Markdown 报告输出
-
-📌 可扩展方向：
-
-* 多房源对比 Agent
-* 投资回报率分析
-* 自动生成投资报告
-
----
-
-## 🕷 链家房源爬虫系统（Lianjia Spider）
-
-**用于采集真实二手房数据**
-
-### 特点
-
-* 必须使用 **有头浏览器**
-* Cookie 登录态复用
-* 与业务系统完全解耦
-* JSON 形式落盘
-
-### 目录结构
+## Repository Structure
 
 ```text
-backend/app/spider/lianjia/
-├── login_save_state.py     # 登录并保存 cookie
-├── lianjia_spider.py       # 主爬虫
-├── lianjia_state.json      # 登录态
-└── lianjia_json/           # 爬取结果
-```
-
-### 使用步骤（重要）
-
-**① 保存登录态**
-
-```bash
-cd backend
-python app/spider/lianjia/login_save_state.py
-```
-
-**② 启动爬虫**
-
-```bash
-python -m app.spider.lianjia.lianjia_spider
-```
-
----
-
-## 💻 Frontend（React + Vite + Ant Design · 端口 5173）
-
-### 功能页面
-
-* 登录 / 注册（JWT）
-* 房价预测（传统 ML）
-* AI 分析（多模型）
-* 房源管理（CRUD）
-* 可视化图表
-* 爬虫任务 & 数据标注页面
-
----
-
-## 🧱 项目结构总览
-
-```text
-house-price/
-├── backend/          # FastAPI + ML + DB + Spider
-├── ai_service/       # AI Service + LangGraph
-├── frontend/         # React 前端
+.
+├── frontend/      # React app
+├── backend/       # Business API + DB + model training + crawler scripts
+├── ai_service/    # AI analysis and chat service
 ├── docker-compose.yml
 └── README.md
 ```
 
----
+## Installation
 
-## ⚙️ 环境要求
+### Prerequisites
+- Python 3.13+
+- Node.js 18+
+- MySQL 8+
+- `uv` (recommended for Python dependency management)
+- Docker + Docker Compose (optional but recommended)
 
-* Python ≥ 3.11（强烈推荐 `uv`）
-* Node.js ≥ 18
-* MySQL ≥ 8.0
-* Playwright（爬虫）
+### Option A: Docker Compose (recommended)
 
----
+```bash
+docker compose up -d --build
+```
 
-## 🐍 Backend 启动（8000）
+Exposed ports:
+- Frontend: `http://localhost` (port `80`)
+- Backend docs: `http://localhost:8000/docs`
+- AI service docs: `http://localhost:8080/docs`
+- MySQL: `localhost:3306`
+
+### Option B: Local development
+
+1. Start MySQL and create environment files.
+2. Start backend:
 
 ```bash
 cd backend
 uv sync
 uv run python create_database.py
 uv run alembic upgrade head
-uv run python -m app.scripts.import_crawl_json
 uv run python -m app.train
 uv run uvicorn app.main:app --reload --port 8000
 ```
 
----
-
-## 🤖 AI Service 启动（8080）
+3. Start AI service:
 
 ```bash
 cd ai_service
 uv sync
-uv run uvicorn app.main:app --port 8080
+uv run uvicorn app.main:app --reload --port 8080
 ```
 
----
-
-## 💻 Frontend 启动（5173）
+4. Start frontend:
 
 ```bash
 cd frontend
@@ -242,37 +95,127 @@ npm install
 npm run dev
 ```
 
----
+## Usage Examples
 
-## 🛠 FAQ（常见问题）
-
-### ❓ uvicorn import 错误
+### 1) Register and login
 
 ```bash
-uv run uvicorn app.main:app
+curl -X POST http://localhost:8000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@example.com","full_name":"Demo","password":"123456"}'
+
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=demo@example.com&password=123456"
 ```
 
-### ❓ MySQL Unknown database
+### 2) Predict house price
 
 ```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"area_sqm":80,"bedrooms":3,"age_years":5}'
+```
+
+### 3) AI price analysis
+
+```bash
+curl -X POST http://localhost:8080/price-analysis \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider":"qwen",
+    "features":{"area_sqm":80,"bedrooms":3,"age_years":5},
+    "predicted_price":450000
+  }'
+```
+
+## Configuration Guidelines
+
+### Backend (`backend/.env`)
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=house_price_db
+SECRET_KEY=replace_with_strong_secret
+ALGORITHM=HS256
+DB_ECHO=0
+```
+
+### AI service (`ai_service/.env`)
+
+```env
+SECRET_KEY=must_match_backend_secret
+ALGORITHM=HS256
+
+QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+QWEN_API_KEY=your_qwen_key
+QWEN_MODEL=qwen-plus
+
+KIMI_BASE_URL=...
+KIMI_API_KEY=...
+KIMI_MODEL=...
+
+DEEPSEEK_BASE_URL=...
+DEEPSEEK_API_KEY=...
+DEEPSEEK_MODEL=...
+```
+
+### Frontend (`frontend/.env`)
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+VITE_AI_BASE_URL=http://localhost:8080
+```
+
+## Development Quality Checks
+
+```bash
+# frontend lint + build
+cd frontend
+npm run lint
+npm run build
+
+# python syntax check
+cd ..
+python3 -m compileall backend/app ai_service/app
+```
+
+## Contribution Guidelines
+
+1. Fork and create a feature branch.
+2. Keep changes scoped and consistent with existing module boundaries.
+3. Run `npm run lint`, `npm run build`, and Python compile checks before PR.
+4. Update API/docs/README when behavior changes.
+5. Prefer explicit error handling and avoid debug `print` in production paths.
+
+## Troubleshooting
+
+### `SECRET_KEY not set` (backend)
+Set `SECRET_KEY` in backend environment before startup.
+
+### `/predict` returns model not found
+Run training first:
+
+```bash
+cd backend
+uv run python -m app.train
+```
+
+### Database connection errors
+- Ensure MySQL is reachable and credentials are correct.
+- Re-run:
+
+```bash
+cd backend
 uv run python create_database.py
+uv run alembic upgrade head
 ```
 
-### ❓ Alembic 不生成迁移
+### Frontend cannot call APIs
+Verify `frontend/.env` has correct `VITE_API_BASE_URL` and `VITE_AI_BASE_URL`, then restart Vite.
 
-```python
-from app.db import Base
-target_metadata = Base.metadata
-```
-
----
-
-## 📌 说明
-
-> 本项目适合作为：
-
-* 工程级全栈项目展示
-* AI Agent / LangGraph 实验平台
-* 房价分析 / 数据产品原型
-
----
+### AI chat/analysis fails with 401
+`ai_service` and `backend` must share the same `SECRET_KEY` and `ALGORITHM`.

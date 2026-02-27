@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class CrawlHouseOut(BaseModel):
     house_id: str
@@ -10,5 +10,4 @@ class CrawlHouseOut(BaseModel):
     unit_price: float
     district: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

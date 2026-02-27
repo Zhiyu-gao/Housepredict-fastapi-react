@@ -38,8 +38,12 @@ def create_annotation(
     )
 
     db.add(house)
-    db.commit()
-    db.refresh(house)
+    try:
+        db.commit()
+        db.refresh(house)
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="写入标注数据失败")
 
     return {"ok": True, "house_id": house.id}
 

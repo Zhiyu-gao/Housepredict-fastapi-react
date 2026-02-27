@@ -1,7 +1,8 @@
 // src/pages/AccountPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, Form, Input, Button, Typography, Space, Tag, message, Divider } from "antd";
 import { getToken } from "../auth/token";
+import { getErrorMessage } from "../utils/error";
 
 const { Text, Title } = Typography;
 
@@ -32,7 +33,7 @@ const AccountPage: React.FC = () => {
     };
   };
 
-  const fetchMe = async () => {
+  const fetchMe = useCallback(async () => {
     try {
       setLoadingProfile(true);
       const res = await fetch(`${API_BASE_URL}/me`, {
@@ -45,17 +46,16 @@ const AccountPage: React.FC = () => {
         email: data.email,
         full_name: data.full_name,
       });
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "获取用户信息失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "获取用户信息失败"));
     } finally {
       setLoadingProfile(false);
     }
-  };
+  }, [messageApi, profileForm]);
 
   useEffect(() => {
     fetchMe();
-  }, []);
+  }, [fetchMe]);
 
   const handleProfileSave = async (values: { email: string; full_name: string }) => {
     try {
@@ -69,9 +69,8 @@ const AccountPage: React.FC = () => {
       const data: UserInfo = await res.json();
       setUser(data);
       messageApi.success("个人信息已更新");
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "更新资料失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "更新资料失败"));
     } finally {
       setSavingProfile(false);
     }
@@ -91,9 +90,8 @@ const AccountPage: React.FC = () => {
       }
       passwordForm.resetFields();
       messageApi.success("密码已修改");
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "修改密码失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "修改密码失败"));
     } finally {
       setSavingPassword(false);
     }

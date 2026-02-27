@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class HouseCreate(BaseModel):
     area_sqm: float
@@ -9,5 +9,4 @@ class HouseCreate(BaseModel):
 class HouseOut(HouseCreate):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

@@ -1,52 +1,26 @@
-from typing import TypedDict, Literal, List
-from langgraph.graph import StateGraph, END
-class ChatState(TypedDict):
-    question: str
-    answer: str
+from typing import Literal, TypedDict
+
+from langgraph.graph import END, StateGraph
+
 from app.providers.qwen_client import qwen_chat
 
-def qwen_node(state: ChatState) -> ChatState:
-    question = state["question"]
 
-    answer = qwen_chat([
-        {"role": "user", "content": question}
-    ])
+ChatIntent = Literal["who_am_i", "system_help", "price_analysis", "chat"]
 
-    return {
-        "question": question,
-        "answer": answer,
-    }
 
 class ChatState(TypedDict):
-    # 输入
     question: str
     username: str | None
-
-    # 中间状态
-    intent: Literal[
-        "who_am_i",
-        "system_help",
-        "price_analysis",
-        "chat"
-    ]
-
-    # 输出
+    intent: ChatIntent
     answer: str
 
-from app.providers.qwen_client import qwen_chat
 
 def run_intent_graph(question: str, username: str | None):
-    result = chat_graph.invoke({
-        "question": question,
-        "username": username,
-    })
+    result = chat_graph.invoke({"question": question, "username": username})
     return result["intent"]
 
 
 def intent_node(state: ChatState) -> ChatState:
-    """
-    只做一件事：判断用户想干什么
-    """
     prompt = f"""
 你是一个意图分类器，只能返回下面 4 个之一：
 
@@ -62,28 +36,17 @@ def intent_node(state: ChatState) -> ChatState:
 """
 
     intent = qwen_chat(prompt).strip()
-
-    # 兜底，防止模型乱返回
     if intent not in {"who_am_i", "system_help", "price_analysis", "chat"}:
         intent = "chat"
 
-    return {
-        **state,
-        "intent": intent,
-    }
+    return {**state, "intent": intent}
+
 
 def who_am_i_node(state: ChatState) -> ChatState:
     username = state.get("username")
+    answer = "我暂时不知道你的身份，请先登录。" if not username else f"你当前登录的账户名是：{username}"
+    return {**state, "answer": answer}
 
-    if not username:
-        answer = "我暂时不知道你的身份，请先登录。"
-    else:
-        answer = f"你当前登录的账户名是：{username}"
-
-    return {
-        **state,
-        "answer": answer,
-    }
 
 def system_help_node(state: ChatState) -> ChatState:
     return {
@@ -105,36 +68,25 @@ def system_help_node(state: ChatState) -> ChatState:
 
 
 def price_analysis_node(state: ChatState) -> ChatState:
-    return {
-        **state,
-        "answer": "这里将接入房价预测与分析逻辑（下一步实现）。",
-    }
+    return {**state, "answer": "这里将接入房价预测与分析逻辑（下一步实现）。"}
+
 
 def chat_node(state: ChatState) -> ChatState:
     answer = qwen_chat(state["question"])
-    return {
-        **state,
-        "answer": answer,
-    }
+    return {**state, "answer": answer}
 
-from langgraph.graph import StateGraph, END
 
 graph = StateGraph(ChatState)
-
-# ===== 注册节点 =====
 graph.add_node("intent", intent_node)
 graph.add_node("who_am_i", who_am_i_node)
 graph.add_node("system_help", system_help_node)
 graph.add_node("price_analysis", price_analysis_node)
 graph.add_node("chat", chat_node)
 
-# ===== 入口 =====
 graph.set_entry_point("intent")
-
-# ===== 条件路由（核心）=====
 graph.add_conditional_edges(
     "intent",
-    lambda s: s["intent"],
+    lambda state: state["intent"],
     {
         "who_am_i": "who_am_i",
         "system_help": "system_help",
@@ -142,14 +94,9 @@ graph.add_conditional_edges(
         "chat": "chat",
     },
 )
-
-# ===== 结束 =====
 graph.add_edge("who_am_i", END)
 graph.add_edge("system_help", END)
 graph.add_edge("price_analysis", END)
 graph.add_edge("chat", END)
-
-chat_graph = graph.compile()
-
 
 chat_graph = graph.compile()

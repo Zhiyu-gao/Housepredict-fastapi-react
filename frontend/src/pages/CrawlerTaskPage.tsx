@@ -1,5 +1,6 @@
 import { Card, Table, Tag, Button, Space, message, Modal, Form, Input, Select } from "antd";
 import { useState } from "react";
+import type { ColumnsType } from "antd/es/table";
 
 interface CrawlerTask {
   id: number;
@@ -7,6 +8,11 @@ interface CrawlerTask {
   status: "pending" | "running" | "success" | "failed";
   created_at: string;
   updated_at: string;
+}
+
+interface CreateTaskValues {
+  name: string;
+  city: string;
 }
 
 export default function CrawlerTaskPage() {
@@ -60,7 +66,7 @@ export default function CrawlerTaskPage() {
     });
   };
 
-  const columns = [
+  const columns: ColumnsType<CrawlerTask> = [
     {
       title: "任务名称",
       dataIndex: "name",
@@ -85,7 +91,7 @@ export default function CrawlerTaskPage() {
     {
       title: "操作",
       width: 280,
-      render: (_: any, task: CrawlerTask) => (
+      render: (_value, task: CrawlerTask) => (
         <Space>
           <Button size="small" onClick={() => startTask(task)} type="primary">
             启动
@@ -99,7 +105,7 @@ export default function CrawlerTaskPage() {
     },
   ];
 
-  const onCreateTask = (values: any) => {
+  const onCreateTask = (values: CreateTaskValues) => {
     message.success(`创建任务成功：${values.name}`);
     setCreateModalOpen(false);
   };

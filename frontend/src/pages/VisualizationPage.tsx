@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Card,
   Row,
@@ -22,6 +22,7 @@ import {
   Cell,
 } from "recharts";
 import { getToken } from "../auth/token";
+import { getErrorMessage } from "../utils/error";
 
 const { Title, Text } = Typography;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -80,23 +81,24 @@ const VisualizationPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE_URL}/crawl-houses`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (!res.ok) throw new Error("获取房源失败");
+      setHouses(await res.json());
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "获取房源失败"));
+    } finally {
+      setLoading(false);
+    }
+  }, [messageApi]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${API_BASE_URL}/crawl-houses`, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
-        if (!res.ok) throw new Error("获取房源失败");
-        setHouses(await res.json());
-      } catch (e: any) {
-        messageApi.error(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   /* ===== 派生字段 ===== */
   const parsed = useMemo(() => {

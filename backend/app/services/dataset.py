@@ -1,20 +1,27 @@
 # app/services/dataset.py
-from pathlib import Path
 import json
+from pathlib import Path
+
 import pandas as pd
 
 ANNOTATION_DIR = Path("data/annotations")
 
+
 def load_training_df() -> pd.DataFrame:
-    rows = []
+    rows: list[dict[str, float | int]] = []
 
     for p in ANNOTATION_DIR.glob("*.json"):
-        ann = json.loads(p.read_text(encoding="utf-8"))
-        rows.append({
-            "area_sqm": ann["features"]["area_sqm"],
-            "bedrooms": ann["features"]["bedrooms"],
-            "age_years": ann["features"]["age_years"],
-            "price": ann["label"]["price"],
-        })
+        try:
+            ann = json.loads(p.read_text(encoding="utf-8"))
+            rows.append(
+                {
+                    "area_sqm": ann["features"]["area_sqm"],
+                    "bedrooms": ann["features"]["bedrooms"],
+                    "age_years": ann["features"]["age_years"],
+                    "price": ann["label"]["price"],
+                }
+            )
+        except (KeyError, json.JSONDecodeError):
+            continue
 
     return pd.DataFrame(rows)

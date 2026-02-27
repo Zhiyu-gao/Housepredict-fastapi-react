@@ -32,7 +32,7 @@ import MetadataPage from "./pages/MetadataPage";
 import AiChatPage from "./pages/AiChatPage";
 import ProjectIntroPage from "./pages/ProjectIntroPage";
 import RequireAuth from "./auth/RequireAuth";
-import {clearToken } from "./auth/token";
+import { clearToken } from "./auth/token";
 
 const { Sider, Header, Content } = Layout;
 const { Text } = Typography;
@@ -60,7 +60,7 @@ function AppLayout() {
 
 
   const handleLogout = () => {
-    clearToken?.(); // 如果你没有 clearToken，就删掉这一行，把 token 清理逻辑放这里
+    clearToken();
     navigate("/login", { replace: true });
   };
 

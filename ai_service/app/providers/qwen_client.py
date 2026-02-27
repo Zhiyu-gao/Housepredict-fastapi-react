@@ -1,6 +1,8 @@
-from openai import OpenAI
-from app.config import QWEN_CONFIG
 from typing import Iterator
+
+from openai import OpenAI
+
+from app.config import QWEN_CONFIG
 
 client = OpenAI(
     api_key=QWEN_CONFIG.api_key,
@@ -18,13 +20,14 @@ def qwen_chat(prompt: str) -> str:
     )
     return completion.choices[0].message.content
 
-def qwen_chat_messages(messages: list[dict]) -> str:
+
+def qwen_chat_messages(messages: list[dict[str, str]]) -> str:
     if not isinstance(messages, list):
         raise TypeError("messages must be list")
 
-    for i, m in enumerate(messages):
-        assert isinstance(m, dict)
-        assert isinstance(m.get("content"), str)
+    for message in messages:
+        if not isinstance(message, dict) or not isinstance(message.get("content"), str):
+            raise TypeError("each message must be a dict with string content")
 
     completion = client.chat.completions.create(
         model=QWEN_CONFIG.model,
@@ -33,7 +36,8 @@ def qwen_chat_messages(messages: list[dict]) -> str:
     )
     return completion.choices[0].message.content
 
-def qwen_chat_stream(prompt: str):
+
+def qwen_chat_stream(prompt: str) -> Iterator[str]:
     stream = client.chat.completions.create(
         model=QWEN_CONFIG.model,
         messages=[{"role": "user", "content": prompt}],
@@ -46,10 +50,7 @@ def qwen_chat_stream(prompt: str):
             continue
 
         delta = chunk.choices[0].delta
-
-        # ✅ 关键在这里
         content = getattr(delta, "content", None)
 
         if content:
             yield content
-

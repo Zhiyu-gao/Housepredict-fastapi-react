@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Card,
   List,
@@ -12,6 +12,7 @@ import {
   Divider,
   Space,
 } from "antd";
+import { getErrorMessage } from "../utils/error";
 
 const { Title, Text } = Typography;
 
@@ -73,20 +74,20 @@ const MetadataPage: React.FC = () => {
      数据加载
   ===================== */
 
-  const fetchHouses = async () => {
+  const fetchHouses = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`${API_BASE_URL}/crawl-houses`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setHouses(Array.isArray(data) ? data : []);
-    } catch {
-      messageApi.error("获取爬虫房源失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "获取爬虫房源失败"));
       setHouses([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [messageApi]);
 
   const fetchAnnotatedIds = async () => {
     try {
@@ -102,7 +103,7 @@ const MetadataPage: React.FC = () => {
   useEffect(() => {
     fetchHouses();
     fetchAnnotatedIds();
-  }, []);
+  }, [fetchHouses]);
 
   /* =====================
      标注流程

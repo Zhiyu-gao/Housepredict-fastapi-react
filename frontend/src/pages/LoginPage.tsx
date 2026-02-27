@@ -11,6 +11,7 @@ import {
 import { api } from "../api/client";
 import { setToken } from "../auth/token";
 import { AFTER_LOGIN_REDIRECT } from "../config/routes";
+import { getErrorMessage } from "../utils/error";
 
 const { Title, Text } = Typography;
 
@@ -56,8 +57,8 @@ const LoginPage: React.FC = () => {
           return c - 1;
         });
       }, 1000);
-    } catch (err: any) {
-      message.error(err?.response?.data?.detail || "发送验证码失败");
+    } catch (error: unknown) {
+      message.error(getErrorMessage(error, "发送验证码失败"));
     } finally {
       setSendingCode(false);
     }
@@ -95,8 +96,8 @@ const LoginPage: React.FC = () => {
       setToken(access_token);
       message.success("登录成功");
       navigate(AFTER_LOGIN_REDIRECT, { replace: true });
-    } catch (err: any) {
-      message.error(err?.response?.data?.detail || "登录失败");
+    } catch (error: unknown) {
+      message.error(getErrorMessage(error, "登录失败"));
     } finally {
       setLoading(false);
     }

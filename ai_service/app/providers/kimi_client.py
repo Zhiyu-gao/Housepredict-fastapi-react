@@ -1,5 +1,6 @@
 # ai_service/app/providers/kimi_client.py
-from typing import List, Dict
+from typing import Dict, List
+
 from openai import OpenAI
 
 from app.config import KIMI_CONFIG

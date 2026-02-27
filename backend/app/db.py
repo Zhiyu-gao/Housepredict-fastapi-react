@@ -1,7 +1,8 @@
 # app/db.py
 import os
+from collections.abc import Generator
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 DATABASE_URL = (
     f"mysql+pymysql://{os.getenv('DB_USER', 'root')}:"
@@ -11,9 +12,11 @@ DATABASE_URL = (
     f"{os.getenv('DB_NAME', 'house_price_db')}"
 )
 
+DB_ECHO = os.getenv("DB_ECHO", "0").lower() in {"1", "true", "yes"}
+
 engine = create_engine(
     DATABASE_URL,
-    echo=True,
+    echo=DB_ECHO,
     future=True,
 )
 
@@ -26,7 +29,7 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 
 
-def get_db():
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db

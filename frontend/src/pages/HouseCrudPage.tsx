@@ -1,5 +1,5 @@
 // src/pages/HouseCrudPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Card,
   Form,
@@ -16,6 +16,7 @@ import {
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { getToken } from "../auth/token";
+import { getErrorMessage } from "../utils/error";
 
 const { Text, Title } = Typography;
 
@@ -48,7 +49,7 @@ const HouseCrudPage: React.FC = () => {
     };
   };
 
-  const fetchHouses = async () => {
+  const fetchHouses = useCallback(async () => {
     try {
       setHousesLoading(true);
       const res = await fetch(`${API_BASE_URL}/houses`, {
@@ -57,17 +58,16 @@ const HouseCrudPage: React.FC = () => {
       if (!res.ok) throw new Error(`获取房源列表失败：${res.status}`);
       const data: House[] = await res.json();
       setHouses(data);
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "获取房源列表失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "获取房源列表失败"));
     } finally {
       setHousesLoading(false);
     }
-  };
+  }, [messageApi]);
 
   useEffect(() => {
     fetchHouses();
-  }, []);
+  }, [fetchHouses]);
 
   const handleHouseFinish = async (values: HouseFormValues) => {
     try {
@@ -98,9 +98,8 @@ const HouseCrudPage: React.FC = () => {
       houseForm.resetFields();
       setEditingHouse(null);
       messageApi.success(isEditing ? "房源更新成功" : "房源创建成功");
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "保存房源失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "保存房源失败"));
     } finally {
       setSavingHouse(false);
     }
@@ -115,9 +114,8 @@ const HouseCrudPage: React.FC = () => {
       if (!res.ok) throw new Error(`删除失败：${res.status}`);
       messageApi.success(`房源 #${id} 已删除`);
       fetchHouses();
-    } catch (err: any) {
-      console.error(err);
-      messageApi.error(err.message || "删除房源失败");
+    } catch (error: unknown) {
+      messageApi.error(getErrorMessage(error, "删除房源失败"));
     }
   };
 

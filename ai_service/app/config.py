@@ -18,7 +18,7 @@ def _get_env(name: str, default: str | None = None) -> str:
 
 
 KIMI_CONFIG = ProviderConfig(
-    base_url=_get_env("KIMI_BASE_URL", "https://api.kimi.example/v1"),  # TODO:换真实地址
+    base_url=_get_env("KIMI_BASE_URL", "https://api.kimi.example/v1"),
     api_key=_get_env("KIMI_API_KEY", "dummy-kimi-key"),
     model=_get_env("KIMI_MODEL", "kimi-default-model"),
 )
@@ -41,11 +41,10 @@ DEEPSEEK_CONFIG = ProviderConfig(
 
 SECRET_KEY = _get_env(
     "SECRET_KEY",
-    "CHANGE_ME_PLEASE",  # 兜底，防止本地炸
+    "CHANGE_ME_PLEASE",
 )
 
 ALGORITHM = _get_env(
     "ALGORITHM",
     "HS256",
 )
-

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Form, Input, Button, Typography, Card, message } from "antd";
 import { api } from "../api/client";
+import { getErrorMessage } from "../utils/error";
 
 const { Title, Text } = Typography;
 
@@ -34,11 +35,8 @@ const RegisterPage: React.FC = () => {
 
       message.success("注册成功，请登录");
       navigate("/login", { replace: true });
-    } catch (err: any) {
-      console.error(err);
-      message.error(
-        err?.response?.data?.detail || "注册失败，请稍后再试"
-      );
+    } catch (error: unknown) {
+      message.error(getErrorMessage(error, "注册失败，请稍后再试"));
     } finally {
       setLoading(false);
     }

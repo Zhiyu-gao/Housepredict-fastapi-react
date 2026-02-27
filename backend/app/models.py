@@ -1,8 +1,8 @@
-# app/models.py
-from sqlalchemy import Column, Integer, Float, String, DateTime, JSON,func
-from .db import Base
 from datetime import datetime
-# 爬虫房源（原始数据）
+from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, func
+
+from .db import Base
+
 
 class CrawlHouse(Base):
     __tablename__ = "crawl_houses"
@@ -34,13 +34,12 @@ class CrawlHouse(Base):
 
     follow_count = Column(Integer)
 
-    tags = Column(JSON)              # MySQL 5.7+ 支持 JSON
+    tags = Column(JSON)
     cover_image = Column(String(512))
 
     crawl_time = Column(DateTime, default=datetime.utcnow)
 
-    # 是否已被标注进训练集（非常重要）
-    is_annotated = Column(Integer, default=0)  # 0 = 未标注，1 = 已标注
+    is_annotated = Column(Integer, default=0)
 
 
 # 训练用房源（干净样本）

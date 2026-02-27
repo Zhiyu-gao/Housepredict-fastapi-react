@@ -3,9 +3,9 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from app.database import get_db
 from app import models
 from app.core.security import decode_access_token
+from app.db import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")  # 登录接口地址
 
@@ -14,7 +14,7 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ) -> models.User:
-    from app.schemas import TokenData  # 防循环引用，如有需要
+    from app.schemas import TokenData
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
