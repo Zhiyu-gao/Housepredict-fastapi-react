@@ -5,6 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+ARG VITE_API_BASE_URL=http://localhost:8000
+ARG VITE_AI_BASE_URL=http://localhost:8080
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_AI_BASE_URL=$VITE_AI_BASE_URL
+
 COPY . .
 RUN npm run build
 

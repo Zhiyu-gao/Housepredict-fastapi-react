@@ -59,6 +59,18 @@ AI Service (FastAPI)
 docker compose up -d --build
 ```
 
+The compose file is self-contained and can start without creating local `.env` files.
+Default DB credentials (for local demo):
+- host: `localhost`
+- port: `3306`
+- user: `root`
+- password: `123456`
+- database: `house_price_db`
+
+Notes:
+- `backend` and `ai_service` share the same JWT `SECRET_KEY` in `docker-compose.yml`.
+- AI provider keys use placeholder values by default; replace them in `docker-compose.yml` for real provider calls.
+
 Exposed ports:
 - Frontend: `http://localhost` (port `80`)
 - Backend docs: `http://localhost:8000/docs`

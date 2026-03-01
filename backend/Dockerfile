@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # 安装 uv（你项目必需）
 RUN pip install uv
